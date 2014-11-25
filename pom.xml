@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.github.cloudfoundry-community</groupId>
+	<artifactId>snotel</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>Java Dropsonde Client</name>
+	<description>Java support for Cloud Foundry's Loggregator using the Dropsonde protocol.</description>
+	<url>https://github.com/cloudfoundry-community/snotel</url>
+
+	<properties>
+		<java.version>1.8</java.version>
+
+		<netty.version>4.0.24.Final</netty.version>
+		<protobuf.version>2.5.0</protobuf.version>
+		<testng.version>6.3.1</testng.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.squareup.wire</groupId>
+				<artifactId>wire-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<id>control</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+						<configuration>
+							<protoSourceDirectory>src/main/proto/control</protoSourceDirectory>
+							<protoFiles>
+								<param>controlmessage.proto</param>
+								<param>heartbeatrequest.proto</param>
+								<param>uuid.proto</param>
+							</protoFiles>
+						</configuration>
+					</execution>
+					<execution>
+						<id>events</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+						<configuration>
+							<protoSourceDirectory>src/main/proto/events</protoSourceDirectory>
+							<protoFiles>
+								<param>envelope.proto</param>
+								<param>error.proto</param>
+								<param>heartbeat.proto</param>
+								<param>http.proto</param>
+								<param>log.proto</param>
+								<param>metric.proto</param>
+								<param>uuid.proto</param>
+							</protoFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>${testng.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.wire</groupId>
+			<artifactId>wire-runtime</artifactId>
+			<version>1.6.0</version>
+		</dependency>
+	</dependencies>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>scm:git:https://github.com/cloudfoundry-community/snotel.git</url>
+		<connection>scm:git:https://github.com/cloudfoundry-community/snotel</connection>
+		<developerConnection>scm:git:https://github.com/cloudfoundry-community/snotel</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Mike Heath</name>
+			<email>mheath@apache.org</email>
+		</developer>
+	</developers>
+
+</project>

@@ -17,7 +17,7 @@ import java.time.Instant;
 public class MetronClientBuilder {
 
 	private final String origin;
-	private SocketAddress metronAgent = InetSocketAddress.createUnresolved("localhost", 3457);
+	private SocketAddress metronAgent = new InetSocketAddress("localhost", 3457);
 
 	private MetronClientBuilder(String origin) {
 		this.origin = origin;
@@ -58,7 +58,7 @@ public class MetronClientBuilder {
 					}
 
 					private void emitLog(Instant timestamp, String applicationGuid, String message, LogMessage.MessageType type) {
-						final long nanoTimestamp = timestamp.getEpochSecond() * timestamp.getNano();
+						final long nanoTimestamp = timestamp.getEpochSecond() * 1000000000 + timestamp.getNano();
 						final LogMessage logMessage = new LogMessage.Builder()
 								.app_id(applicationGuid)
 								.message(ByteString.encodeUtf8(message))

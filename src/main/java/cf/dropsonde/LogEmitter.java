@@ -20,7 +20,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * @author Mike Heath <elcapo@gmail.com>
+ * @author Mike Heath
  */
 public interface LogEmitter {
 

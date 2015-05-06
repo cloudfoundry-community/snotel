@@ -23,7 +23,7 @@
 
 		<netty.version>4.0.24.Final</netty.version>
 		<protobuf.version>2.5.0</protobuf.version>
-		<testng.version>6.3.1</testng.version>
+		<wire.version>1.6.0</wire.version>
 	</properties>
 
 	<build>
@@ -99,9 +99,14 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-handler</artifactId>
+			<version>4.0.27.Final</version>
+		</dependency>
+		<dependency>
 			<groupId>com.squareup.wire</groupId>
 			<artifactId>wire-runtime</artifactId>
-			<version>1.6.0</version>
+			<version>${wire.version}</version>
 		</dependency>
 	</dependencies>
 

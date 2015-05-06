@@ -1,14 +1,15 @@
 package cf.dropsonde;
 
-import events.Envelope;
 import events.LogMessage;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioDatagramChannel;
 import okio.ByteString;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.DatagramChannel;
 import java.time.Instant;
 
 /**
@@ -18,6 +19,8 @@ public class MetronClientBuilder {
 
 	private final String origin;
 	private SocketAddress metronAgent = new InetSocketAddress("localhost", 3457);
+	private EventLoopGroup eventLoopGroup;
+	private Class<? extends Channel> channelClass;
 
 	private MetronClientBuilder(String origin) {
 		this.origin = origin;
@@ -28,6 +31,12 @@ public class MetronClientBuilder {
 		return this;
 	}
 
+	public MetronClientBuilder eventLoopGroup(EventLoopGroup eventLoopGroup, Class<? extends Channel> channelClass) {
+		this.eventLoopGroup = eventLoopGroup;
+		this.channelClass = channelClass;
+		return this;
+	}
+
 	public static MetronClientBuilder create(String origin) {
 		return new MetronClientBuilder(origin);
 	}
@@ -35,13 +44,21 @@ public class MetronClientBuilder {
 	public MetronClient build() {
 		return new MetronClient() {
 
-			private final DatagramChannel channel;
+			private final EventLoopGroup eventLoopGroup;
+			private final Channel channel;
+
 			{
-				try {
-					channel = DatagramChannel.open().connect(metronAgent);
-				} catch (IOException e) {
-					throw new DropsondeException(e);
+				final Bootstrap bootstrap = new Bootstrap().handler(new ControlMessageHandler());
+				if (MetronClientBuilder.this.eventLoopGroup == null) {
+					eventLoopGroup = new NioEventLoopGroup(1);
+					bootstrap.group(eventLoopGroup).channel(NioDatagramChannel.class);
+				} else {
+					eventLoopGroup = null;
+					bootstrap.group(MetronClientBuilder.this.eventLoopGroup).channel(channelClass);
 				}
+				channel = bootstrap.connect(metronAgent).syncUninterruptibly().channel();
+				channel.pipeline().addLast(new EnvelopeEncoder());
+				channel.pipeline().addLast(new EventWrapperEncoder(origin));
 			}
 
 			@Override
@@ -67,32 +84,16 @@ public class MetronClientBuilder {
 								.timestamp(nanoTimestamp)
 								.message_type(type)
 								.build();
-						final Envelope envelope = new Envelope.Builder()
-								.eventType(Envelope.EventType.LogMessage)
-								.timestamp(nanoTimestamp)
-								.origin(origin)
-								.logMessage(logMessage)
-								.build();
-						emitEnvelope(envelope);
+						channel.writeAndFlush(logMessage);
 					}
 				};
 			}
 
-			private void emitEnvelope(Envelope envelope) {
-				final ByteBuffer buffer = ByteBuffer.wrap(envelope.toByteArray());
-				try {
-					channel.write(buffer);
-				} catch (IOException e) {
-					throw new DropsondeException(e);
-				}
-			}
-
 			@Override
 			public void close() {
-				try {
-					channel.close();
-				} catch (IOException e) {
-					throw new DropsondeException(e);
+				channel.close();
+				if (eventLoopGroup != null) {
+					eventLoopGroup.shutdownGracefully();
 				}
 			}
 		};

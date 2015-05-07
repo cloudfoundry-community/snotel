@@ -9,6 +9,8 @@ public interface MetronClient extends AutoCloseable {
 
 	void emitCounterEvent(String name, long delta);
 
+	void emitError(String source, int code, String message);
+
 	void emitValueMetric(String name, double value, String unit);
 
 	@Override

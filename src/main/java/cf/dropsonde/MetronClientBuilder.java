@@ -1,8 +1,7 @@
 package cf.dropsonde;
 
-import events.CounterEvent;
-import events.LogMessage;
-import events.ValueMetric;
+import events.*;
+import events.Error;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -94,6 +93,11 @@ public class MetronClientBuilder {
 			@Override
 			public void emitCounterEvent(String name, long delta) {
 				channel.writeAndFlush(new CounterEvent.Builder().name(name).delta(delta).build());
+			}
+
+			@Override
+			public void emitError(String source, int code, String message) {
+				channel.writeAndFlush(new Error(source, code, message));
 			}
 
 			@Override

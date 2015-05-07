@@ -1,8 +1,10 @@
 package cf.dropsonde;
 
 import events.LogMessage;
+import events.ValueMetric;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
@@ -75,18 +77,22 @@ public class MetronClientBuilder {
 					}
 
 					private void emitLog(Instant timestamp, String applicationGuid, String message, LogMessage.MessageType type) {
-						final long nanoTimestamp = timestamp.getEpochSecond() * 1000000000 + timestamp.getNano();
 						final LogMessage logMessage = new LogMessage.Builder()
 								.app_id(applicationGuid)
 								.message(ByteString.encodeUtf8(message))
 								.source_type(sourceType)
 								.source_instance(sourceInstance)
-								.timestamp(nanoTimestamp)
+								.timestamp(Time.timestamp())
 								.message_type(type)
 								.build();
 						channel.writeAndFlush(logMessage);
 					}
 				};
+			}
+
+			@Override
+			public void emitValueMetric(String name, double value, String unit) {
+				channel.writeAndFlush(new ValueMetric(name, value, unit));
 			}
 
 			@Override

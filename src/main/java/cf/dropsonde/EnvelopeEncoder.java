@@ -25,7 +25,7 @@ import io.netty.channel.ChannelHandlerContext;
  */
 class EnvelopeEncoder extends io.netty.handler.codec.MessageToByteEncoder<Envelope> {
 	@Override
-	protected void encode(ChannelHandlerContext channelHandlerContext, Envelope envelope, ByteBuf byteBuf) throws Exception {
+	protected void encode(ChannelHandlerContext context, Envelope envelope, ByteBuf byteBuf) throws Exception {
 		byteBuf.writeBytes(envelope.toByteArray());
 	}
 }

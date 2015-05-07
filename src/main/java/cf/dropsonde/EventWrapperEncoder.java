@@ -48,9 +48,7 @@ class EventWrapperEncoder extends MessageToMessageEncoder<Message> {
 		if (message instanceof Envelope) {
 			list.add(message);
 		} else {
-			final Instant timestamp = Instant.now();
-			final long nanoTimestamp = timestamp.getEpochSecond() * 1000000000 + timestamp.getNano();
-			final Envelope.Builder builder = new Envelope.Builder().origin(origin).timestamp(nanoTimestamp);
+			final Envelope.Builder builder = new Envelope.Builder().origin(origin).timestamp(Time.timestamp());
 
 			if (message instanceof ContainerMetric) {
 				builder.eventType(Envelope.EventType.ContainerMetric).containerMetric((ContainerMetric) message);

@@ -13,6 +13,8 @@ public interface MetronClient extends AutoCloseable {
 
 	void emitValueMetric(String name, double value, String unit);
 
+	HttpStartStopEmitter createHttpStartStopEmitter();
+
 	@Override
 	void close();
 }

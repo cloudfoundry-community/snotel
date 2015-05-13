@@ -7,7 +7,10 @@ import java.time.Instant;
  */
 class Time {
 	static long timestamp() {
-		final Instant now = Instant.now();
-		return now.getEpochSecond() * 1_000_000_000 + now.getNano();
+		return timestamp(Instant.now());
+	}
+
+	static long timestamp(Instant timestamp) {
+		return timestamp.getEpochSecond() * 1_000_000_000 + timestamp.getNano();
 	}
 }

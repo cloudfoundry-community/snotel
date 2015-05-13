@@ -4,7 +4,6 @@ import events.*;
 import events.Error;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
@@ -103,6 +102,16 @@ public class MetronClientBuilder {
 			@Override
 			public void emitValueMetric(String name, double value, String unit) {
 				channel.writeAndFlush(new ValueMetric(name, value, unit));
+			}
+
+			@Override
+			public HttpStartStopEmitter createHttpStartStopEmitter() {
+				return new HttpStartStopEmitter() {
+					@Override
+					public void emit() {
+						channel.writeAndFlush(builder.build());
+					}
+				};
 			}
 
 			@Override

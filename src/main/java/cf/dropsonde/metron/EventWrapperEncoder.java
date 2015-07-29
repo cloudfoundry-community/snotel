@@ -14,7 +14,7 @@
  *   limitations under the License.
  *
  */
-package cf.dropsonde;
+package cf.dropsonde.metron;
 
 import com.squareup.wire.Message;
 import events.ContainerMetric;
@@ -29,7 +29,6 @@ import events.ValueMetric;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
 
-import java.time.Instant;
 import java.util.List;
 
 /**

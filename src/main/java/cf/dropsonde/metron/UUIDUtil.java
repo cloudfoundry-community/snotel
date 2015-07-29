@@ -14,15 +14,18 @@
  *   limitations under the License.
  *
  */
-package cf.dropsonde;
+package cf.dropsonde.metron;
 
 /**
  * @author Mike Heath
  */
-public interface ApplicationLogEmitter {
+class UUIDUtil {
 
-	void emit(String message);
-
-	void emitError(String message);
+	public static events.UUID javaUUIDtoEventUUID(java.util.UUID javaUUID) {
+		return new events.UUID(
+				Long.reverseBytes(javaUUID.getLeastSignificantBits()),
+				Long.reverseBytes(javaUUID.getMostSignificantBits())
+		);
+	}
 
 }

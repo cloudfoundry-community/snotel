@@ -14,7 +14,7 @@
  *   limitations under the License.
  *
  */
-package cf.dropsonde;
+package cf.dropsonde.metron;
 
 import com.squareup.wire.Wire;
 import control.ControlMessage;

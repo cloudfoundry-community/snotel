@@ -14,18 +14,24 @@
  *   limitations under the License.
  *
  */
-package cf.dropsonde;
+package cf.dropsonde.firehose;
+
+import com.squareup.wire.Message;
+import rx.Subscriber;
+
+import java.io.Closeable;
 
 /**
  * @author Mike Heath
  */
-class UUIDUtil {
+class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Message>, Closeable {
+	@Override
+	public void call(Subscriber<? super Message> subscriber) {
 
-	public static events.UUID javaUUIDtoEventUUID(java.util.UUID javaUUID) {
-		return new events.UUID(
-				Long.reverseBytes(javaUUID.getLeastSignificantBits()),
-				Long.reverseBytes(javaUUID.getMostSignificantBits())
-		);
 	}
 
+	@Override
+	public void close() {
+
+	}
 }

@@ -1,4 +1,4 @@
-package cf.dropsonde;
+package cf.dropsonde.metron;
 
 import java.time.Instant;
 

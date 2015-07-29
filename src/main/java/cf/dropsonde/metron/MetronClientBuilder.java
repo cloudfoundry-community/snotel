@@ -1,4 +1,4 @@
-package cf.dropsonde;
+package cf.dropsonde.metron;
 
 import events.*;
 import events.Error;

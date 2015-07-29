@@ -14,18 +14,25 @@
  *   limitations under the License.
  *
  */
-package cf.dropsonde;
+package cf.dropsonde.firehose;
 
-import events.Envelope;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
+import com.squareup.wire.Message;
+import rx.Observable;
+
+import java.io.Closeable;
 
 /**
  * @author Mike Heath
  */
-class EnvelopeEncoder extends io.netty.handler.codec.MessageToByteEncoder<Envelope> {
+public interface Firehose extends Closeable {
+
 	@Override
-	protected void encode(ChannelHandlerContext context, Envelope envelope, ByteBuf byteBuf) throws Exception {
-		byteBuf.writeBytes(envelope.toByteArray());
-	}
+	void close();
+
+	boolean isClosed();
+
+	boolean isConnected();
+
+	Observable<Message> open();
+
 }

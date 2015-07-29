@@ -14,7 +14,7 @@
  *   limitations under the License.
  *
  */
-package cf.dropsonde;
+package cf.dropsonde.metron;
 
 import java.time.Instant;
 import java.util.UUID;

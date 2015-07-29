@@ -14,12 +14,11 @@
  *   limitations under the License.
  *
  */
-package cf.dropsonde;
+package cf.dropsonde.metron;
 
 import events.HttpStartStop;
 import events.Method;
 
-import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.time.Instant;
 import java.util.UUID;

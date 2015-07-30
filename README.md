@@ -1,5 +1,7 @@
 # Snotel
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cloudfoundry-community/snotel?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Snotel is a Java based Doppler Firehose and Metron client. Its name follows the [Loggregator]
 (https://github.com/cloudfoundry/loggregator) naming convention relating to meteorology (Doppler, Metron, NOAA, etc.) More
 importantly, the name Snotel was derived from the

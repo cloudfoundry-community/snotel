@@ -16,7 +16,7 @@
  */
 package cf.dropsonde.firehose;
 
-import com.squareup.wire.Message;
+import events.Envelope;
 import rx.Observable;
 
 import java.io.Closeable;
@@ -33,6 +33,6 @@ public interface Firehose extends Closeable {
 
 	boolean isConnected();
 
-	Observable<Message> open();
+	Observable<Envelope> open();
 
 }

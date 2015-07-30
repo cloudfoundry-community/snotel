@@ -16,12 +16,13 @@
  */
 package cf.dropsonde.firehose;
 
-import com.squareup.wire.Message;
-import io.netty.channel.Channel;
+import events.Envelope;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
 import rx.Observable;
 
 import java.net.URI;
+import java.util.UUID;
 
 /**
  * @author Mike Heath
@@ -30,11 +31,11 @@ public class FirehoseBuilder {
 
 	private URI firehoseUrl;
 	private String token;
-	private String subscriptionId;
+	private String subscriptionId = UUID.randomUUID().toString();
 	private boolean skipTlsValidation;
 
 	private EventLoopGroup eventLoopGroup;
-	private Class<? extends Channel> channelClass;
+	private Class<? extends SocketChannel> channelClass;
 
 	public static FirehoseBuilder create(String firehoseUrl, String token) {
 		return new FirehoseBuilder(firehoseUrl, token);
@@ -50,6 +51,11 @@ public class FirehoseBuilder {
 
 	public FirehoseBuilder(URI firhoseUrl, String token) {
 		this.firehoseUrl = firhoseUrl;
+		final String scheme = firhoseUrl.getScheme();
+		if (!"ws".equalsIgnoreCase(scheme) && !"wss".equalsIgnoreCase(scheme)) {
+			throw new IllegalArgumentException("Only ws/wss URLs are accepted (i.e. wss://loggregator.mycf.example.com)");
+		}
+
 		this.token = token;
 	}
 
@@ -58,7 +64,7 @@ public class FirehoseBuilder {
 		return this;
 	}
 
-	public FirehoseBuilder eventLoopGroup(EventLoopGroup eventLoopGroup, Class<? extends Channel> channelClass) {
+	public FirehoseBuilder eventLoopGroup(EventLoopGroup eventLoopGroup, Class<? extends SocketChannel> channelClass) {
 		this.eventLoopGroup = eventLoopGroup;
 		this.channelClass = channelClass;
 		return this;
@@ -72,12 +78,20 @@ public class FirehoseBuilder {
 	public Firehose build() {
 		return new Firehose() {
 
-			final NettyFirehoseOnSubscribe onSubscribe = null;
+			final NettyFirehoseOnSubscribe onSubscribe = new NettyFirehoseOnSubscribe(
+					firehoseUrl,
+					token,
+					subscriptionId,
+					skipTlsValidation,
+					eventLoopGroup,
+					channelClass
+			);
 			volatile boolean closed = false;
 
 			@Override
 			public void close() {
 				closed = true;
+				onSubscribe.close();
 			}
 
 			@Override
@@ -87,18 +101,19 @@ public class FirehoseBuilder {
 
 			@Override
 			public boolean isConnected() {
-				return false; //return channel != null && channel.isActive();
+				return onSubscribe.isConnected();
 			}
 
 			@Override
-			public Observable<Message> connect() {
+			public Observable<Envelope> open() {
 				if (closed) {
 					throw new IllegalStateException("The firehose client is closed.");
 				}
 
-				final Observable<Message> observable = Observable.create(onSubscribe);
-				observable.lift()
-				return observable;
+				return Observable
+						.create(onSubscribe)
+						.publish()
+						.refCount();
 			}
 		};
 	}

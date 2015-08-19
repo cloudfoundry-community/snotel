@@ -41,6 +41,7 @@ import io.netty.handler.codec.http.websocketx.PongWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketClientHandshakerFactory;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketFrameAggregator;
 import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
@@ -59,6 +60,7 @@ import java.security.NoSuchAlgorithmException;
  */
 class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Envelope>, Closeable {
 
+	public static final String HANDLER_NAME = "handler";
 	private final Channel channel;
 
 	// Set this EventLoopGroup if an EventLoopGroup was not provided. This groups needs to be shutdown when the
@@ -112,9 +114,8 @@ class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Envelope>, C
 							}
 							pipeline.addLast(
 									new HttpClientCodec(),
-									new HttpObjectAggregator(8192),
-									handler
-							);
+									new HttpObjectAggregator(8192));
+							pipeline.addLast(HANDLER_NAME, handler);
 						}
 					});
 			channel = null;
@@ -195,6 +196,7 @@ class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Envelope>, C
 			final Channel channel = context.channel();
 			if (!handshaker.isHandshakeComplete()) {
 				handshaker.finishHandshake(channel, (FullHttpResponse) message);
+				channel.pipeline().addBefore(HANDLER_NAME, "websocket-frame-aggregator", new WebSocketFrameAggregator(64 * 1024));
 				subscriber.onStart();
 				return;
 			}

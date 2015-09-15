@@ -133,7 +133,7 @@
 	<scm>
 		<url>scm:git:https://github.com/cloudfoundry-community/snotel.git</url>
 		<connection>scm:git:https://github.com/cloudfoundry-community/snotel</connection>
-		<developerConnection>scm:git:https://github.com/cloudfoundry-community/snotel</developerConnection>
+		<developerConnection>scm:git:git@github.com:cloudfoundry-community/snotel.git</developerConnection>
 	</scm>
 
 	<developers>

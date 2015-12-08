@@ -1,0 +1,8 @@
+---
+metron.origin: test
+---
+spring:
+  profiles: disableAutoConfig
+
+metron:
+  enabled: false

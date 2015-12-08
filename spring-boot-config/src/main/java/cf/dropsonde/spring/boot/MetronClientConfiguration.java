@@ -1,6 +1,5 @@
 package cf.dropsonde.spring.boot;
 
-import cf.dropsonde.metron.LogEmitter;
 import cf.dropsonde.metron.MetronClient;
 import cf.dropsonde.metron.MetronClientBuilder;
 import io.netty.channel.EventLoopGroup;
@@ -22,7 +21,6 @@ public class MetronClientConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	@ConditionalOnProperty(prefix = "metron", name = "enabled", matchIfMissing = true)
 	public MetronClient metronClient(MetronClientProperties properties) {
 		return MetronClientBuilder
 				.create(properties.getOrigin())

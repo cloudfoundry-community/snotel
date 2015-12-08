@@ -11,7 +11,7 @@
 
 	<groupId>com.github.cloudfoundry-community</groupId>
 	<artifactId>snotel-parent</artifactId>
-	<version>0.3-SNAPSHOT</version>
+	<version>0.3.M1</version>
 	<packaging>pom</packaging>
 
 	<name>Java Dropsonde Client Build</name>

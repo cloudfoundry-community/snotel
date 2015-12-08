@@ -18,8 +18,11 @@ import java.time.Instant;
  */
 public class MetronClientBuilder {
 
+	public static final String DEFAULT_METRON_AGENT_HOST = "localhost";
+	public static final int DEFAULT_METRON_AGENT_PORT = 3457;
+
 	private final String origin;
-	private SocketAddress metronAgent = new InetSocketAddress("localhost", 3457);
+	private SocketAddress metronAgent = new InetSocketAddress(DEFAULT_METRON_AGENT_HOST, DEFAULT_METRON_AGENT_PORT);
 	private EventLoopGroup eventLoopGroup;
 	private Class<? extends Channel> channelClass;
 

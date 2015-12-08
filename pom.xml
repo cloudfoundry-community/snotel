@@ -10,74 +10,92 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.github.cloudfoundry-community</groupId>
-	<artifactId>snotel</artifactId>
+	<artifactId>snotel-parent</artifactId>
 	<version>0.3-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 
-	<name>Java Dropsonde Client</name>
+	<name>Java Dropsonde Client Build</name>
 	<description>Java support for Cloud Foundry's Loggregator using the Dropsonde protocol.</description>
 	<url>https://github.com/cloudfoundry-community/snotel</url>
 
 	<properties>
 		<java.version>1.8</java.version>
 
-		<netty.version>4.0.28.Final</netty.version>
-		<rxjava.version>1.0.12</rxjava.version>
-		<wire.version>1.6.0</wire.version>
+		<lombok.version>1.16.6</lombok.version>
+		<netty.version>4.0.33.Final</netty.version>
+		<rxjava.version>1.0.16</rxjava.version>
+		<spring-boot.version>1.3.0.RELEASE</spring-boot.version>
+		<wire.version>1.8.0</wire.version>
 		<junit.version>4.12</junit.version>
 	</properties>
 
-	<build>
-		<plugins>
-			<plugin>
+	<modules>
+		<module>client</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.github.cloudfoundry-community</groupId>
+				<artifactId>snotel</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.cloudfoundry-community</groupId>
+				<artifactId>snotel-spring-boot-config</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-autoconfigure</artifactId>
+				<version>${spring-boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter</artifactId>
+				<version>${spring-boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter</artifactId>
+				<version>${spring-boot.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+				<optional>true</optional>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-handler</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-codec-http</artifactId>
+				<version>${netty.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.reactivex</groupId>
+				<artifactId>rxjava</artifactId>
+				<version>${rxjava.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>com.squareup.wire</groupId>
-				<artifactId>wire-maven-plugin</artifactId>
-				<version>1.6.0</version>
-				<executions>
-					<execution>
-						<id>control</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>generate-sources</goal>
-						</goals>
-						<configuration>
-							<protoSourceDirectory>src/main/proto/control</protoSourceDirectory>
-							<protoFiles>
-								<param>controlmessage.proto</param>
-								<param>heartbeatrequest.proto</param>
-								<param>uuid.proto</param>
-							</protoFiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>events</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>generate-sources</goal>
-						</goals>
-						<configuration>
-							<protoSourceDirectory>src/main/proto/events</protoSourceDirectory>
-							<protoFiles>
-								<param>envelope.proto</param>
-								<param>error.proto</param>
-								<param>heartbeat.proto</param>
-								<param>http.proto</param>
-								<param>log.proto</param>
-								<param>metric.proto</param>
-								<param>uuid.proto</param>
-							</protoFiles>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<configuration>
-					<excludePackageNames>control:events</excludePackageNames>
-				</configuration>
-			</plugin>
-		</plugins>
+				<artifactId>wire-runtime</artifactId>
+				<version>${wire.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -91,35 +109,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<dependencies>
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-handler</artifactId>
-			<version>${netty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty-codec-http</artifactId>
-			<version>${netty.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.reactivex</groupId>
-			<artifactId>rxjava</artifactId>
-			<version>${rxjava.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup.wire</groupId>
-			<artifactId>wire-runtime</artifactId>
-			<version>${wire.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 
 	<licenses>
 		<license>

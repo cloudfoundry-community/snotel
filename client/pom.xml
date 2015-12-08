@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<groupId>com.github.cloudfoundry-community</groupId>
+		<artifactId>snotel-parent</artifactId>
+		<version>0.3-SNAPSHOT</version>
+		<relativePath>../</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>snotel</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Java Dropsonde Client</name>
+	<description>Java support for Cloud Foundry's Loggregator using the Dropsonde protocol.</description>
+	<url>https://github.com/cloudfoundry-community/snotel</url>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.squareup.wire</groupId>
+				<artifactId>wire-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<id>control</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+						<configuration>
+							<protoSourceDirectory>${project.basedir}/src/main/proto/control</protoSourceDirectory>
+							<protoFiles>
+								<param>controlmessage.proto</param>
+								<param>heartbeatrequest.proto</param>
+								<param>uuid.proto</param>
+							</protoFiles>
+						</configuration>
+					</execution>
+					<execution>
+						<id>events</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate-sources</goal>
+						</goals>
+						<configuration>
+							<protoSourceDirectory>${project.basedir}/src/main/proto/events</protoSourceDirectory>
+							<protoFiles>
+								<param>envelope.proto</param>
+								<param>error.proto</param>
+								<param>heartbeat.proto</param>
+								<param>http.proto</param>
+								<param>log.proto</param>
+								<param>metric.proto</param>
+								<param>uuid.proto</param>
+							</protoFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<excludePackageNames>control:events</excludePackageNames>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-handler</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-codec-http</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.reactivex</groupId>
+			<artifactId>rxjava</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.wire</groupId>
+			<artifactId>wire-runtime</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+</project>

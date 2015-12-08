@@ -1,10 +1,11 @@
 package cf.dropsonde.spring.boot;
 
+import cf.dropsonde.metron.LogEmitter;
 import cf.dropsonde.metron.MetronClient;
 import cf.dropsonde.metron.MetronClientBuilder;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.channel.socket.nio.NioDatagramChannel;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,12 +22,12 @@ public class MetronClientConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	@ConditionalOnProperty("metron.enabled")
+	@ConditionalOnProperty(prefix = "metron", name = "enabled", matchIfMissing = true)
 	public MetronClient metronClient(MetronClientProperties properties) {
 		return MetronClientBuilder
 				.create(properties.getOrigin())
-				.metronAgent(InetSocketAddress.createUnresolved(properties.getMetronAgentHost(), properties.getMetronAgentPort()))
-				.eventLoopGroup(metronEventLoopGroup(), NioSocketChannel.class)
+				.metronAgent(new InetSocketAddress(properties.getMetronAgentHost(), properties.getMetronAgentPort()))
+				.eventLoopGroup(metronEventLoopGroup(), NioDatagramChannel.class)
 				.build();
 	}
 

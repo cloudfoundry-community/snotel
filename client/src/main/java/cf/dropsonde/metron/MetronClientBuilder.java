@@ -1,11 +1,14 @@
 package cf.dropsonde.metron;
 
-import events.*;
+import events.CounterEvent;
 import events.Error;
+import events.LogMessage;
+import events.ValueMetric;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.DatagramChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import okio.ByteString;
 
@@ -24,7 +27,7 @@ public class MetronClientBuilder {
 	private final String origin;
 	private SocketAddress metronAgent = new InetSocketAddress(DEFAULT_METRON_AGENT_HOST, DEFAULT_METRON_AGENT_PORT);
 	private EventLoopGroup eventLoopGroup;
-	private Class<? extends Channel> channelClass;
+	private Class<? extends DatagramChannel> channelClass;
 
 	private MetronClientBuilder(String origin) {
 		this.origin = origin;
@@ -35,7 +38,7 @@ public class MetronClientBuilder {
 		return this;
 	}
 
-	public MetronClientBuilder eventLoopGroup(EventLoopGroup eventLoopGroup, Class<? extends Channel> channelClass) {
+	public MetronClientBuilder eventLoopGroup(EventLoopGroup eventLoopGroup, Class<? extends DatagramChannel> channelClass) {
 		this.eventLoopGroup = eventLoopGroup;
 		this.channelClass = channelClass;
 		return this;

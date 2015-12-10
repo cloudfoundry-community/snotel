@@ -6,8 +6,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,7 +18,6 @@ import java.net.InetSocketAddress;
 public class MetronClientConfiguration {
 
 	@Bean
-	@ConditionalOnMissingBean
 	public MetronClient metronClient(MetronClientProperties properties) {
 		return MetronClientBuilder
 				.create(properties.getOrigin())

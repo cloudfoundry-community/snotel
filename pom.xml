@@ -65,9 +65,9 @@
 				<version>${spring-boot.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter</artifactId>
-				<version>${spring-boot.version}</version>
+				<groupId>com.github.cloudfoundry-community</groupId>
+				<artifactId>snotel-spring-boot-starter</artifactId>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.projectlombok</groupId>

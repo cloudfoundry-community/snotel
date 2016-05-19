@@ -1,0 +1,35 @@
+This is a simple Spring Boot based app to demonstrate the using Snotel to listen to Cloudfoundry Firehose events
+
+
+== Demonstration
+* Start up PCF Dev - Download https://github.com/pivotal-cf/pcfdev[PCFDev] and start it up locally.
+
+* Using command line, connect to this instance of PCF Dev
+[source]
+----
+cf login # login with admin/admin
+cf oauth-token
+----
+* Grab the token from the previous step and paste into the src/main/resources/application.yml file under the key `cf.firehose.authtoken`
+
+* Start the application
+[source]
+----
+mvn spring-boot:run
+----
+
+* If everything is configured cleanly, you should start seeing the firehose events on the console
+[source]
+----
+Envelope{origin=MetronAgent, eventType=CounterEvent, timestamp=1463347802229178192, counterEvent=CounterEvent{name=MessageAggregator.counterEventReceived, delta=41, total=123022}}
+Envelope{origin=MetronAgent, eventType=CounterEvent, timestamp=1463347802229949275, counterEvent=CounterEvent{name=dropsondeUnmarshaller.counterEventReceived, delta=31, total=73040}}
+Envelope{origin=auctioneer, eventType=ValueMetric, timestamp=1463347802797580462, valueMetric=ValueMetric{name=LockHeld.v1-locks-auctioneer_lock, value=1.0, unit=Metric}}
+Envelope{origin=auctioneer, eventType=ValueMetric, timestamp=1463347802797465120, valueMetric=ValueMetric{name=LockHeldDuration.v1-locks-auctioneer_lock, value=1.02850698837512E14, unit=nanos}}
+Envelope{origin=file_server, eventType=ValueMetric, timestamp=1463347803049522230, valueMetric=ValueMetric{name=memoryStats.numBytesAllocatedHeap, value=913296.0, unit=count}}
+Envelope{origin=file_server, eventType=ValueMetric, timestamp=1463347803049325346, valueMetric=ValueMetric{name=numCPUS, value=4.0, unit=count}}
+Envelope{origin=file_server, eventType=ValueMetric, timestamp=1463347803049421749, valueMetric=ValueMetric{name=numGoRoutines, value=24.0, unit=count}}
+Envelope{origin=file_server, eventType=ValueMetric, timestamp=1463347803049595460, valueMetric=ValueMetric{name=memoryStats.lastGCPauseTimeNS, value=1342058.0, unit=count}}
+Envelope{origin=file_server, eventType=ValueMetric, timestamp=1463347803049546578, valueMetric=ValueMetric{name=memoryStats.numBytesAllocatedStack, value=622592.0, unit=count}}
+Envelope{origin=file_server, eventType=ValueMetric, timestamp=1463347803049559545, valueMetric=ValueMetric{name=memoryStats.numBytesAllocated, value=913296.0, unit=count}}
+Envelope{origin=file_server, eventType=ValueMetric, timestamp=1463347803049571330, valueMetric=ValueMetric{name=memoryStats.numMallocs, value=2183398.0, unit=count}}
+----

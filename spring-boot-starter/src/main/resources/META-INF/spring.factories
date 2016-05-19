@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cf.dropsonde.spring.boot.SnotelAutoConfiguration
+cf.dropsonde.spring.boot.SnotelAutoConfiguration,\
+cf.dropsonde.spring.boot.SnotelFirehoseAutoConfiguration

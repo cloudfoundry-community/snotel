@@ -16,13 +16,15 @@
  */
 package cf.dropsonde.metron;
 
+import org.cloudfoundry.dropsonde.events.UUID;
+
 /**
  * @author Mike Heath
  */
 class UUIDUtil {
 
-	public static events.UUID javaUUIDtoEventUUID(java.util.UUID javaUUID) {
-		return new events.UUID(
+	public static UUID javaUUIDtoEventUUID(java.util.UUID javaUUID) {
+		return new UUID(
 				Long.reverseBytes(javaUUID.getLeastSignificantBits()),
 				Long.reverseBytes(javaUUID.getMostSignificantBits())
 		);

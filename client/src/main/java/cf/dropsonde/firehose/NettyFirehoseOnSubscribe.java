@@ -16,8 +16,7 @@
  */
 package cf.dropsonde.firehose;
 
-import com.squareup.wire.Wire;
-import events.Envelope;
+import org.cloudfoundry.dropsonde.events.Envelope;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.channel.Channel;
@@ -167,8 +166,6 @@ class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Envelope>, C
 
 		private final WebSocketClientHandshaker handshaker;
 
-		private final Wire wire = new Wire();
-
 		private Subscriber<? super Envelope> subscriber;
 
 		public WebSocketClientHandler(WebSocketClientHandshaker handshaker) {
@@ -213,7 +210,7 @@ class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Envelope>, C
 				context.writeAndFlush(new PongWebSocketFrame(((PingWebSocketFrame)frame).retain().content()));
 			} else if (frame instanceof BinaryWebSocketFrame) {
 				final ByteBufInputStream input = new ByteBufInputStream(((BinaryWebSocketFrame)message).content());
-				final Envelope envelope = wire.parseFrom(input, Envelope.class);
+				final Envelope envelope = Envelope.ADAPTER.decode(input);
 				subscriber.onNext(envelope);
 			}
 		}

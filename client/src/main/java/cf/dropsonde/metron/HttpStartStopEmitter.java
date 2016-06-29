@@ -16,8 +16,9 @@
  */
 package cf.dropsonde.metron;
 
-import events.HttpStartStop;
-import events.Method;
+import org.cloudfoundry.dropsonde.events.HttpStartStop;
+import org.cloudfoundry.dropsonde.events.PeerType;
+import org.cloudfoundry.dropsonde.events.Method;
 
 import java.net.SocketAddress;
 import java.time.Instant;
@@ -27,21 +28,6 @@ import java.util.UUID;
  * @author Mike Heath
  */
 public abstract class HttpStartStopEmitter {
-
-	public enum PeerType {
-		CLIENT(events.PeerType.Client),
-		SERVER(events.PeerType.Server);
-
-		private final events.PeerType peerType;
-
-		private PeerType(events.PeerType peerType) {
-			this.peerType = peerType;
-		}
-
-		private events.PeerType getProtobufPeerType() {
-			return peerType;
-		}
-	}
 
 	protected final HttpStartStop.Builder builder = new HttpStartStop.Builder();
 
@@ -70,7 +56,7 @@ public abstract class HttpStartStopEmitter {
 	}
 
 	public HttpStartStopEmitter peerType(PeerType peerType) {
-		builder.peerType(peerType.getProtobufPeerType());
+		builder.peerType(peerType);
 		return this;
 	}
 
@@ -100,11 +86,6 @@ public abstract class HttpStartStopEmitter {
 
 	public HttpStartStopEmitter contentLength(long contentLength) {
 		builder.contentLength(contentLength);
-		return this;
-	}
-
-	public HttpStartStopEmitter parentRequestId(UUID parentRequestId) {
-		builder.parentRequestId(UUIDUtil.javaUUIDtoEventUUID(parentRequestId));
 		return this;
 	}
 

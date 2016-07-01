@@ -23,6 +23,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -45,6 +46,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketVersion;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.util.CharsetUtil;
 import rx.Subscriber;
 
@@ -60,7 +62,7 @@ import java.security.NoSuchAlgorithmException;
 class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Envelope>, Closeable {
 
 	public static final String HANDLER_NAME = "handler";
-	private final Channel channel;
+	private Channel channel;
 
 	// Set this EventLoopGroup if an EventLoopGroup was not provided. This groups needs to be shutdown when the
 	// firehose client shuts down.
@@ -96,28 +98,31 @@ class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Envelope>, C
 				bootstrap.group(eventLoopGroup);
 			}
 			bootstrap
+					.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 15000)
 					.channel(channelClass == null ? NioSocketChannel.class : channelClass)
 					.remoteAddress(host, port)
 					.handler(new ChannelInitializer<SocketChannel>() {
 						@Override
-						protected void initChannel(SocketChannel channel) throws Exception {
+						protected void initChannel(SocketChannel c) throws Exception {
 							final HttpHeaders headers = new DefaultHttpHeaders();
 							headers.add(HttpHeaders.Names.AUTHORIZATION, token);
 							final WebSocketClientHandler handler =
 									new WebSocketClientHandler(
 											WebSocketClientHandshakerFactory.newHandshaker(
 													fullUri, WebSocketVersion.V13, null, false, headers));
-							final ChannelPipeline pipeline = channel.pipeline();
+							final ChannelPipeline pipeline = c.pipeline();
 							if (sslContext != null) {
-								pipeline.addLast(sslContext.newHandler(channel.alloc(), host, port));
+								pipeline.addLast(sslContext.newHandler(c.alloc(), host, port));
 							}
+							pipeline.addLast(new ReadTimeoutHandler(30));
 							pipeline.addLast(
 									new HttpClientCodec(),
 									new HttpObjectAggregator(8192));
 							pipeline.addLast(HANDLER_NAME, handler);
+
+							channel = c;
 						}
 					});
-			channel = null;
 		} catch (NoSuchAlgorithmException | SSLException e) {
 			throw new RuntimeException(e);
 		}

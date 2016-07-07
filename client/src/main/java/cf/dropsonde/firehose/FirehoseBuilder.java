@@ -16,7 +16,7 @@
  */
 package cf.dropsonde.firehose;
 
-import events.Envelope;
+import org.cloudfoundry.dropsonde.events.Envelope;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import rx.Observable;

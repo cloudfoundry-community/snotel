@@ -1,9 +1,10 @@
 package cf.dropsonde.metron;
 
-import events.CounterEvent;
-import events.Error;
-import events.LogMessage;
-import events.ValueMetric;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.cloudfoundry.dropsonde.events.CounterEvent;
+import org.cloudfoundry.dropsonde.events.Error;
+import org.cloudfoundry.dropsonde.events.LogMessage;
+import org.cloudfoundry.dropsonde.events.ValueMetric;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -55,7 +56,9 @@ public class MetronClientBuilder {
 			private final Channel channel;
 
 			{
-				final Bootstrap bootstrap = new Bootstrap().handler(new ControlMessageHandler());
+				// we are not handling ControlMessages / HeartBeats anymore so a simple
+				// ChannelInboundHandlerAdapter to forward to next handler.
+				final Bootstrap bootstrap = new Bootstrap().handler(new ChannelInboundHandlerAdapter());
 				if (MetronClientBuilder.this.eventLoopGroup == null) {
 					eventLoopGroup = new NioEventLoopGroup(1);
 					bootstrap.group(eventLoopGroup).channel(NioDatagramChannel.class);

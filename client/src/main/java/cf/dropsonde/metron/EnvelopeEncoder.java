@@ -16,9 +16,9 @@
  */
 package cf.dropsonde.metron;
 
-import events.Envelope;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
+import org.cloudfoundry.dropsonde.events.Envelope;
 
 /**
  * @author Mike Heath
@@ -26,6 +26,6 @@ import io.netty.channel.ChannelHandlerContext;
 class EnvelopeEncoder extends io.netty.handler.codec.MessageToByteEncoder<Envelope> {
 	@Override
 	protected void encode(ChannelHandlerContext context, Envelope envelope, ByteBuf byteBuf) throws Exception {
-		byteBuf.writeBytes(envelope.toByteArray());
+		byteBuf.writeBytes(Envelope.ADAPTER.encode(envelope));
 	}
 }

@@ -17,15 +17,15 @@
 package cf.dropsonde.metron;
 
 import com.squareup.wire.Message;
-import events.ContainerMetric;
-import events.CounterEvent;
-import events.Envelope;
-import events.Heartbeat;
-import events.HttpStart;
-import events.HttpStartStop;
-import events.HttpStop;
-import events.LogMessage;
-import events.ValueMetric;
+import org.cloudfoundry.dropsonde.events.ContainerMetric;
+import org.cloudfoundry.dropsonde.events.CounterEvent;
+import org.cloudfoundry.dropsonde.events.Envelope;
+import org.cloudfoundry.dropsonde.events.Error;
+import org.cloudfoundry.dropsonde.events.HttpStart;
+import org.cloudfoundry.dropsonde.events.HttpStartStop;
+import org.cloudfoundry.dropsonde.events.HttpStop;
+import org.cloudfoundry.dropsonde.events.LogMessage;
+import org.cloudfoundry.dropsonde.events.ValueMetric;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
 
@@ -53,10 +53,8 @@ class EventWrapperEncoder extends MessageToMessageEncoder<Message> {
 				builder.eventType(Envelope.EventType.ContainerMetric).containerMetric((ContainerMetric) message);
 			} else if (message instanceof CounterEvent) {
 				builder.eventType(Envelope.EventType.CounterEvent).counterEvent((CounterEvent) message);
-			} else if (message instanceof events.Error) {
-				builder.eventType(Envelope.EventType.Error).error((events.Error) message);
-			} else if (message instanceof Heartbeat) {
-				builder.eventType(Envelope.EventType.Heartbeat).heartbeat((Heartbeat) message);
+			} else if (message instanceof Error) {
+				builder.eventType(Envelope.EventType.Error).error((Error) message);
 			} else if (message instanceof HttpStart) {
 				builder.eventType(Envelope.EventType.HttpStart).httpStart((HttpStart) message);
 			} else if (message instanceof HttpStartStop) {

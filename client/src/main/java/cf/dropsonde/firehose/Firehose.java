@@ -16,7 +16,7 @@
  */
 package cf.dropsonde.firehose;
 
-import events.Envelope;
+import org.cloudfoundry.dropsonde.events.Envelope;
 import rx.Observable;
 
 import java.io.Closeable;

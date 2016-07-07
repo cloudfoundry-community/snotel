@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.github.cloudfoundry-community</groupId>
 		<artifactId>snotel-parent</artifactId>
-		<version>0.3-SNAPSHOT</version>
+		<version>0.4-SNAPSHOT</version>
 		<relativePath>../</relativePath>
 	</parent>
 
@@ -22,23 +22,8 @@
 			<plugin>
 				<groupId>com.squareup.wire</groupId>
 				<artifactId>wire-maven-plugin</artifactId>
-				<version>1.6.0</version>
+				<version>2.2.0</version>
 				<executions>
-					<execution>
-						<id>control</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>generate-sources</goal>
-						</goals>
-						<configuration>
-							<protoSourceDirectory>${project.basedir}/src/main/proto/control</protoSourceDirectory>
-							<protoFiles>
-								<param>controlmessage.proto</param>
-								<param>heartbeatrequest.proto</param>
-								<param>uuid.proto</param>
-							</protoFiles>
-						</configuration>
-					</execution>
 					<execution>
 						<id>events</id>
 						<phase>generate-sources</phase>
@@ -50,12 +35,12 @@
 							<protoFiles>
 								<param>envelope.proto</param>
 								<param>error.proto</param>
-								<param>heartbeat.proto</param>
 								<param>http.proto</param>
 								<param>log.proto</param>
 								<param>metric.proto</param>
 								<param>uuid.proto</param>
 							</protoFiles>
+							<generatedSourceDirectory>${project.basedir}/src/main/generated</generatedSourceDirectory>
 						</configuration>
 					</execution>
 				</executions>

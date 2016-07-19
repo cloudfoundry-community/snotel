@@ -54,6 +54,8 @@ import javax.net.ssl.SSLException;
 import javax.net.ssl.TrustManagerFactory;
 import java.io.Closeable;
 import java.net.URI;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
 /**
@@ -82,7 +84,9 @@ class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Envelope>, C
 				if (skipTlsValidation) {
 					sslContextBuilder.trustManager(InsecureTrustManagerFactory.INSTANCE);
 				} else {
-					sslContextBuilder.trustManager(TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm()));
+					TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+					trustManagerFactory.init((KeyStore)null);
+					sslContextBuilder.trustManager(trustManagerFactory);
 				}
 				sslContext = sslContextBuilder.build();
 			} else {
@@ -123,7 +127,7 @@ class NettyFirehoseOnSubscribe implements rx.Observable.OnSubscribe<Envelope>, C
 							channel = c;
 						}
 					});
-		} catch (NoSuchAlgorithmException | SSLException e) {
+		} catch (NoSuchAlgorithmException | SSLException | KeyStoreException e) {
 			throw new RuntimeException(e);
 		}
 	}

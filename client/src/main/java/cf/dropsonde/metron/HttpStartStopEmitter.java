@@ -18,6 +18,9 @@ package cf.dropsonde.metron;
 
 import org.cloudfoundry.dropsonde.events.HttpStartStop;
 import org.cloudfoundry.dropsonde.events.PeerType;
+
+import cf.dropsonde.UUIDUtil;
+
 import org.cloudfoundry.dropsonde.events.Method;
 
 import java.net.SocketAddress;

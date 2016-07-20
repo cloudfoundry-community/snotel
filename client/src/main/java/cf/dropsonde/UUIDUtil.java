@@ -14,14 +14,14 @@
  *   limitations under the License.
  *
  */
-package cf.dropsonde.metron;
+package cf.dropsonde;
 
 import org.cloudfoundry.dropsonde.events.UUID;
 
 /**
  * @author Mike Heath
  */
-class UUIDUtil {
+public class UUIDUtil {
 
 	public static UUID javaUUIDtoEventUUID(java.util.UUID javaUUID) {
 		return new UUID(
@@ -30,4 +30,7 @@ class UUIDUtil {
 		);
 	}
 
+	public static java.util.UUID eventUUIDtoJavaUUID(UUID uuid) {
+		return new java.util.UUID(Long.reverseBytes(uuid.low), Long.reverseBytes(uuid.high));
+	}
 }

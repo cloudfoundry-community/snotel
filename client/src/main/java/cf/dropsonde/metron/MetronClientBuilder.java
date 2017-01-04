@@ -90,7 +90,7 @@ public class MetronClientBuilder {
 								.message(ByteString.encodeUtf8(message))
 								.source_type(sourceType)
 								.source_instance(sourceInstance)
-								.timestamp(Time.timestamp())
+								.timestamp(Time.timestamp(timestamp))
 								.message_type(type)
 								.build();
 						channel.writeAndFlush(logMessage);
